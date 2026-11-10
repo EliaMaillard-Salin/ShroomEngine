@@ -1,10 +1,14 @@
-cmake_minimum_required(VERSION 3.22)
-
 project(Core)
+
+# Enable Hot Reload for MSVC compilers if supported.
+if (POLICY CMP0141)
+	cmake_policy(SET CMP0141 NEW)
+	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+endif()
 
 #include(GenerateExportHeader)
 #generate_export_header(${PROJECT_NAME})
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS YES CACHE BOOL "Export all symbols")
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE CACHE BOOL "Export all symbols")
 
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
@@ -13,12 +17,18 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 add_library(Core::library ALIAS ${PROJECT_NAME})
 
-
-# Project's own include folders (all platforms)
+# Project's own include folders (all platforms) (.h)
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/
+        "${PROJECT_SOURCE_DIR}/include/"
 )
+
+#(.inl)
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        "${PROJECT_SOURCE_DIR}/inline/"
+)
+
 
 
 set(SDL2_DIR_WIN "${CMAKE_SOURCE_DIR}/externalDependencies/SDL2-2.32.10")

@@ -1,7 +1,9 @@
 #ifndef CORE_LOGGER_H
 #define CORE_LOGGER_H
 
-#include <SDL_Log.h>
+#include <SDL_log.h>
+#include <string>
+
 enum class LogType
 {
 	APPLICATION = SDL_LOG_CATEGORY_APPLICATION,
@@ -16,11 +18,15 @@ enum class LogType
 
 };
 
-
 class Logger
 {
+public:
+	Logger() = delete;
+	Logger(Logger const&) = delete;
+	Logger& operator=(Logger const&) = delete;
 
-
+	static void Info(std::string const& message);
+	static void Error(LogType type, std::string const& message);
 };
 
 
