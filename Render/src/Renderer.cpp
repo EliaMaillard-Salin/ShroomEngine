@@ -4,7 +4,10 @@
 #include <Logger.h>
 #include "Drawable2DShapes.h"
 
-Renderer::Renderer():
+
+using namespace shroom;
+
+Renderer::Renderer() :
 	m_pSDLRenderer(nullptr)
 {}
 
@@ -34,7 +37,7 @@ void Renderer::EndDraw()
 void Renderer::DrawShape2D(Rectangle& rRect)
 {
     SDL_SetRenderDrawColor(m_pSDLRenderer, 255, 255, 255, 255);
-    SDL_Rect sdlRect = { rRect.position.X(),rRect.position.Y(),rRect.dimensions.X(),rRect.dimensions.Y() };
+    SDL_Rect sdlRect = { static_cast<int32>(rRect.position.X()),static_cast<int32>(rRect.position.Y()),static_cast<int32>(rRect.dimensions.X()),static_cast<int32>(rRect.dimensions.Y()) };
     SDL_RenderFillRect(m_pSDLRenderer, &sdlRect);
 }
 void Renderer::DrawShape2D(Circle& rCircle)

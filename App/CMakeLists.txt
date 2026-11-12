@@ -1,12 +1,12 @@
 project(App)
 
 
-add_executable(${PROJECT_NAME} 
-    "src/main.cpp" "src/PongScene.cpp" "src/PongScene.h")
+add_executable(${PROJECT_NAME} "src/main.cpp" "src/PongScene.cpp"  "src/PlayerScript.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${PROJECT_SOURCE_DIR}/include/"
 )
+
 set(SDL2_DIR_WIN "${CMAKE_SOURCE_DIR}/externalDependencies/SDL2-2.32.10")
 set(GLEW_DIR_WIN "${CMAKE_SOURCE_DIR}/externalDependencies/glew-2.3.1")
 

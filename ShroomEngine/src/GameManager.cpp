@@ -4,9 +4,14 @@
 #include "Logger.h"
 #include "Drawable2DShapes.h"
 #include "Scene.h"
+#include "Time.h"
+
+using namespace shroom;
+
 
 GameManager::GameManager(const char* gameTitle, Vector2<uint16> screenSize): 
-	m_gameTitle(gameTitle), m_pWindow(nullptr), m_isRunning(false), m_pRenderer(nullptr), m_screenSize(screenSize)
+	m_gameTitle(gameTitle), m_pWindow(nullptr), m_isRunning(false), 
+	m_pRenderer(nullptr), m_screenSize(screenSize), m_pActiveScene(nullptr)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		Logger::Error(LogType::ERROR, "SDL initialization failed.");
@@ -14,11 +19,18 @@ GameManager::GameManager(const char* gameTitle, Vector2<uint16> screenSize):
 		Logger::Info("SDL initialization succeeded!");
 }
 
+shroom::GameManager::~GameManager()
+{
+	m_pWindow.reset();
+	m_pRenderer.reset();
+
+}
+
 void GameManager::Init()
 {
-	m_pWindow = new Window(m_screenSize);
+	m_pWindow = std::make_unique<Window>(m_screenSize);
 	m_pWindow->Open(m_gameTitle.c_str());
-	m_pRenderer = new Renderer();
+	m_pRenderer = std::make_unique<Renderer>();
 	m_pRenderer->Initialize(*m_pWindow);
 }
 
@@ -33,16 +45,16 @@ void GameManager::GameLoop()
 {
 	while (m_isRunning)
 	{
-		// TODO : Object creation
+		Time::ComputeDeltaTime();
+		m_pActiveScene->HandleActorCreation();
 		Inputs(); // Event
+		m_pActiveScene->FixedUpdate();
+		m_pActiveScene->Update();
 
-		FixedUpdate();
-
-		Update();
-		
 		Render();
+		m_pActiveScene->HandleActorDeletion();
 
-		// TODO : Object deletion
+		Time::DelayTime();
 	}
 
 	CloseGame();
@@ -52,21 +64,15 @@ void GameManager::CloseGame()
 {
 	// TODO : Destroy Actors in Game
 	Logger::Info("TODO : Destroy all GameObjects : GameManager::CloseGame");
-
+	for (std::map<std::string,uptr<Scene>>::iterator it = m_scenes.begin(); it != m_scenes.end(); it++)
+	{
+		uptr<Scene> toDelete = std::move(it->second);
+		toDelete->Destroy();
+		toDelete.reset();
+	}
+	m_scenes.clear();
 	m_pWindow->Close();
-}
-
-void GameManager::Update()
-{
-	// TODO : Call Actors Update
-	m_pActiveScene->Update();
-}
-
-
-void GameManager::FixedUpdate()
-{
-	// TODO : Call Actors Fixed Update
-	m_pActiveScene->FixedUpdate();
+	m_pRenderer->Close();
 }
 
 void GameManager::Render()
@@ -100,50 +106,50 @@ void GameManager::Inputs()
 
 void GameManager::LoadScene(std::string sceneName)
 {
-	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Load : " + sceneName + ". Scene not in GameManager.");
 		return;
 	}
-	Scene* pScene = it->second;
-	if (pScene->IsLoaded() == false)
-		pScene->LoadAssets();
+	Scene& rScene = *(it->second);
+	if (rScene.IsLoaded() == false)
+		rScene.LoadAssets();
 }
 void GameManager::UnloadScene(std::string sceneName)
 {
-	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Unload : "+ sceneName + ". Scene not in GameManager.");
 		return;
 	}
-	Scene* pScene = it->second;
-	if (pScene->IsLoaded())
-		pScene->UnloadAssets();
+	Scene& rScene = *(it->second);
+	if (rScene.IsLoaded())
+		rScene.UnloadAssets();
 }
 void GameManager::SetActiveScene(std::string sceneName)
 {
-	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Load : " + sceneName + ". Scene not in GameManager.");
 		return;
 	}
-	m_pActiveScene = it->second;
+	m_pActiveScene = (it->second).get();
 	if (m_pActiveScene->IsLoaded() == false)
 		m_pActiveScene->LoadAssets();
 }
 
-void GameManager::AddSceneInGameManager(Scene* pScene)
+void GameManager::AddSceneInGameManager(Scene& rScene)
 {
-	pScene->Init(m_pRenderer);
-	if (m_scenes.find(pScene->GetName()) != m_scenes.end())
+	rScene.Init(m_pRenderer.get());
+	if (m_scenes.find(rScene.GetName()) != m_scenes.end())
 	{
-		Logger::Info("A Scene Named " + pScene->GetName() + " already in GameManager");
+		Logger::Info("A Scene Named " + rScene.GetName() + " already in GameManager");
 		return;
 	}
-	m_scenes.insert({ pScene->GetName(),pScene });
+	m_scenes.insert({ rScene.GetName(), std::make_unique<Scene>(rScene)});
 }
 
 void GameManager::RemoveSceneFromGameManager(std::string sceneName)

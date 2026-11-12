@@ -4,7 +4,10 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
-typedef Vector2<float> Vector2f;
-typedef Vector2<int> Vector2i;
+namespace shroom
+{
+	typedef Vector2<float> Vector2f;
+	typedef Vector2<int> Vector2i;
+};
 
 #endif // !CORE_MATH_VECTORS_H

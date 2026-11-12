@@ -1,5 +1,9 @@
 
-#include <Window.h>
+
+#include "Window.h"
+#include <Logger.h>
+
+using namespace shroom;
 
 Window::Window(uint16 width, uint16 height) :
 	m_dimensions(width,height), m_pSDLWindow(nullptr)

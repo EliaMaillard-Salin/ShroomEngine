@@ -1,6 +1,9 @@
 project(ShroomEngine)
 
-file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE SOURCES 
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Components/*.cpp"
+)
 
 add_library(${PROJECT_NAME}
         ${SOURCES}
@@ -14,6 +17,7 @@ add_library(ShroomEngine::library ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include/
+        "${PROJECT_SOURCE_DIR}/include/Components"
 )
 
 set(SDL2_DIR_WIN "${CMAKE_SOURCE_DIR}/externalDependencies/SDL2-2.32.10")
