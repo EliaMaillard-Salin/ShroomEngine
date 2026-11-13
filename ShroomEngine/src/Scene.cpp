@@ -22,13 +22,19 @@ void Scene::BeginFrame()
 void Scene::FixedUpdate()
 {
 	OnFixedUpdate();
-	// TODO Call Actor Fixed Update
+	for (auto it : m_actorInScene)
+	{
+		it->FixedUpdate();
+	}
 }
 
 void Scene::Update()
 {
 	OnUpdate();
-	// TODO Call Actor Update
+	for (auto it : m_actorInScene)
+	{
+		it->Update();
+	}
 }
 
 void Scene::Render()
@@ -37,10 +43,10 @@ void Scene::Render()
 	for (auto it : m_actorInScene)
 	{
 		it->GetTransform().GetPosition();
-		Rectangle rect = { it->GetTransform().GetPosition(),{30.0f,10.0f } };
+		Rectangle rect = { it->GetTransform().GetPosition(),{10.0f * it->GetTransform().GetScale().X(),10.0f * it->GetTransform().GetScale().Y()}};
 		m_pRenderer->DrawShape2D(rect);
 	}
-	// TODO Call Actor Render
+	// TODO Add Draw Actor
 }
 
 void Scene::CallEvent(SDL_Event event)
@@ -79,6 +85,7 @@ Actor& Scene::CreateActor()
 {
 	Actor* pActor = new Actor();
 	m_actorToConstruct.push_back(pActor);
+	pActor->m_pScene = this;
 	return *pActor;
 }
 void Scene::AddActorInScene(Actor& actor)
@@ -98,6 +105,7 @@ void Scene::HandleActorCreation()
 		m_actorInScene.push_back(pActor);
 		*it = nullptr;
 		pActor->m_posInSceneList = (m_actorInScene.end()--);
+		pActor->Start();
 	}
 	m_actorToConstruct.clear();
 }
@@ -107,7 +115,7 @@ void Scene::HandleActorDeletion()
 	for (std::list<Actor*>::iterator it = m_actorToDestroy.begin(); it != m_actorToDestroy.end(); it++)
 	{
 		Actor* pActor = *it;
-		m_actorInScene.erase(pActor->m_posInSceneList);
+		m_actorInScene.remove(pActor);
 		pActor->Delete();
 		delete pActor;
 		*it = nullptr;

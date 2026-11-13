@@ -5,6 +5,8 @@
 #include "Drawable2DShapes.h"
 #include "Scene.h"
 #include "Time.h"
+#include "PhysicHandler.h"
+
 
 using namespace shroom;
 
@@ -48,6 +50,7 @@ void GameManager::GameLoop()
 		Time::ComputeDeltaTime();
 		m_pActiveScene->HandleActorCreation();
 		Inputs(); // Event
+		PhysicsHandler::CheckCollision();
 		m_pActiveScene->FixedUpdate();
 		m_pActiveScene->Update();
 
@@ -64,11 +67,11 @@ void GameManager::CloseGame()
 {
 	// TODO : Destroy Actors in Game
 	Logger::Info("TODO : Destroy all GameObjects : GameManager::CloseGame");
-	for (std::map<std::string,uptr<Scene>>::iterator it = m_scenes.begin(); it != m_scenes.end(); it++)
+	for (std::map<std::string,Scene*>::iterator it = m_scenes.begin(); it != m_scenes.end(); it++)
 	{
-		uptr<Scene> toDelete = std::move(it->second);
+		Scene* toDelete = it->second;
 		toDelete->Destroy();
-		toDelete.reset();
+		delete toDelete;
 	}
 	m_scenes.clear();
 	m_pWindow->Close();
@@ -106,7 +109,7 @@ void GameManager::Inputs()
 
 void GameManager::LoadScene(std::string sceneName)
 {
-	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Load : " + sceneName + ". Scene not in GameManager.");
@@ -118,7 +121,7 @@ void GameManager::LoadScene(std::string sceneName)
 }
 void GameManager::UnloadScene(std::string sceneName)
 {
-	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Unload : "+ sceneName + ". Scene not in GameManager.");
@@ -130,13 +133,13 @@ void GameManager::UnloadScene(std::string sceneName)
 }
 void GameManager::SetActiveScene(std::string sceneName)
 {
-	std::map<std::string, uptr<Scene>>::iterator it = m_scenes.find(sceneName);
+	std::map<std::string, Scene*>::iterator it = m_scenes.find(sceneName);
 	if (it == m_scenes.end())
 	{
 		Logger::Info("Unable to Load : " + sceneName + ". Scene not in GameManager.");
 		return;
 	}
-	m_pActiveScene = (it->second).get();
+	m_pActiveScene = (it->second);
 	if (m_pActiveScene->IsLoaded() == false)
 		m_pActiveScene->LoadAssets();
 }
@@ -149,7 +152,7 @@ void GameManager::AddSceneInGameManager(Scene& rScene)
 		Logger::Info("A Scene Named " + rScene.GetName() + " already in GameManager");
 		return;
 	}
-	m_scenes.insert({ rScene.GetName(), std::make_unique<Scene>(rScene)});
+	m_scenes.insert({ rScene.GetName(), &rScene});
 }
 
 void GameManager::RemoveSceneFromGameManager(std::string sceneName)

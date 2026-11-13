@@ -45,7 +45,7 @@ namespace shroom
 	private:
 		uptr<Window>m_pWindow;
 		uptr<Renderer> m_pRenderer;
-		std::map<std::string, uptr<Scene>> m_scenes;
+		std::map<std::string, Scene*> m_scenes;
 		Scene* m_pActiveScene;
 
 		std::string m_gameTitle;

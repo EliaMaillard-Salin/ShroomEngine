@@ -5,9 +5,9 @@
 
 using namespace shroom;
 
-unsigned int Time::m_startFrame = 0;
-unsigned int Time::m_lastFrame = 0;
-unsigned int Time::m_frameTime = 0;
+uint32 Time::m_startFrame = 0;
+uint32 Time::m_lastFrame = 0;
+uint32 Time::m_frameTime = 0;
 float Time::deltaTime = 0;
 
 uint32 Time::ComputeDeltaTime()

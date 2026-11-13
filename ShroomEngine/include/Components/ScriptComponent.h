@@ -3,6 +3,7 @@
 
 
 #include "Component.h"
+#include <list>
 
 namespace shroom
 {
@@ -11,7 +12,7 @@ namespace shroom
 	public:
 
 		ScriptComponent() = delete;
-		ScriptComponent(Actor* pOwner);
+		ScriptComponent(std::string name, Actor* pOwner);
 		virtual ~ScriptComponent();
 
 		virtual void OnStart() {};
@@ -20,14 +21,19 @@ namespace shroom
 		virtual void OnInputPressed(SDL_Event event) {};
 		virtual void Destroy() {};
 
-		virtual ScriptComponent* Duplicate() = 0;
+		virtual void OnCollisionEnter(Collider* pOwnedCollider, Collider* pOtherCollider) {};
+		virtual void OnCollisionExit(Collider* pOwnedCollider, Collider* pOtherCollider) {};
+		virtual void OnCollision(Collider* pOwnedCollider, Collider* pOtherCollider) {};
 
-		virtual void DuplicateValues(Component& out) = 0;
 
-	protected:
+		virtual Component* Duplicate() = 0;
+
+		virtual void DuplicateValues(Component& out);
 
 	private:
+		std::list<ScriptComponent*>::iterator m_posInList;
 
+		friend Actor;
 	};
 
 };

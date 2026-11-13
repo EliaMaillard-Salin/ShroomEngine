@@ -40,7 +40,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator+(Vector2<T> const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out += val;
 		return out;
 	}
@@ -54,7 +54,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator-(Vector2<T> const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out -= val;
 		return out;
 	}
@@ -68,7 +68,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator*(Vector2<T> const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out *= val;
 		return out;
 	}
@@ -81,7 +81,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator*(T const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out *= val;
 		return out;
 	}
@@ -100,7 +100,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator/(Vector2<T> const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out /= val;
 		return out;
 	}
@@ -118,7 +118,7 @@ namespace shroom
 	template <typename T>
 	inline Vector2<T> Vector2<T>::operator/(T const& val)
 	{
-		Vector2<T> out = this;
+		Vector2<T> out = *this;
 		out /= val;
 		return out;
 	}

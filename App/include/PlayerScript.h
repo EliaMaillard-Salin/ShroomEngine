@@ -6,15 +6,16 @@
 class PlayerScript : public shroom::ScriptComponent
 {
 public:
-	PlayerScript(shroom::Actor* pOwner);
+	PlayerScript(std::string name, shroom::Actor* pOwner);
 
 	void OnInputPressed(SDL_Event event) override;
+	void OnCollision(shroom::Collider* pOwned, shroom::Collider* pOther) override;
 
+	shroom::Component* Duplicate() override;
+	void DuplicateValues(shroom::Component& out) override;
 
-	ScriptComponent* Duplicate() override { return nullptr; }
+	void SpawnBullet();
 
-	void DuplicateValues(Component& out) override {};
-	
 private:
 	float m_speed;
 

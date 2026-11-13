@@ -2,13 +2,18 @@
 
 using namespace shroom;
 
-Component::Component(Actor* pOwner) :
+Component::Component(std::string name,Actor* pOwner) :
 	m_pOwner(pOwner), m_isActive(true),m_UpdateOrder(0)
 {}
 
 Component::~Component()
 {
 	m_pOwner = nullptr;
+}
+
+Actor* Component::GetActor()
+{
+	return m_pOwner;
 }
 
 void Component::Destroy()

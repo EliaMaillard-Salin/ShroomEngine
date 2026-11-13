@@ -2,28 +2,44 @@
 #include <Renderer.h>
 #include <Drawable2DShapes.h>
 #include "PlayerScript.h"
+#include "EnemyScript.h"
+#include "Components.h"
+#include "Time.h"
+
 using namespace shroom;
 
 PongScene::PongScene(const char* name) : Scene(name)
 {
 	startingPos = { 250.0f,475.0f };
+
 	Actor& player = CreateActor();
+	player.GetTransform().SetPosition(startingPos);
 	player.AddComponent<PlayerScript>("PlayerScript");
+	BoxCollider& bPlayer = player.AddComponent<BoxCollider>("Box");
+	bPlayer.SetTag(0);
+	player.SetStatic(false);
+}
+
+void PongScene::OnUpdate()
+{
+	enemyCD += Time::deltaTime;
+	if (enemyCD >= maxEnemy_CD)
+	{
+		enemyCD = 0.0f;
+		SpawnEnemy();
+	}
 }
 
 void PongScene::OnRender()
 {
-	Rectangle rect = { startingPos,{50.0f,10.0f} };
-	m_pRenderer->DrawShape2D(rect);
 }
 
-void PongScene::OnInputCalled(SDL_Event event)
+void PongScene::SpawnEnemy()
 {
-	if (event.type == SDL_KEYDOWN)
-	{
-		if (event.key.keysym.sym == SDL_KeyCode::SDLK_q)
-			startingPos.X() -= 5.0f;
-		if (event.key.keysym.sym == SDL_KeyCode::SDLK_d)
-			startingPos.X() += 5.0f;
-	}
+	Actor& enemy = CreateActor();
+	enemy.GetTransform().SetPosition({ 250.0f,50.0f });
+	enemy.AddComponent<EnemyScript>("EnemyScript");
+	BoxCollider& bPlayer = enemy.AddComponent<BoxCollider>("Box");
+	bPlayer.SetTag(1);
+	enemy.SetStatic(false);
 }
