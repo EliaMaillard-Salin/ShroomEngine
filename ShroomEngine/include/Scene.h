@@ -11,12 +11,13 @@ namespace shroom
 {
 	class Renderer;
 	class Actor;
+	class GameManager;
 
 	class Scene
 	{
 	public:
 		Scene(const char* name);
-		void Init(Renderer* pRenderer);
+		void Init(Renderer* pRenderer, GameManager* pGameManager);
 
 		void Start();
 		void BeginFrame();
@@ -52,6 +53,7 @@ namespace shroom
 
 	protected:
 		Renderer* m_pRenderer;
+		GameManager* m_pGameManager;
 
 	private:
 		std::list<Actor*> m_actorToConstruct;

@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "GameManager.h"
 #include <Renderer.h>
 #include <Drawable2DShapes.h>
 using namespace shroom;
@@ -7,9 +8,10 @@ Scene::Scene(const char* name) :
 	m_name(name),m_isLoaded(false),m_pRenderer(nullptr)
 {}
 
-void Scene::Init(Renderer* pRenderer)
+void Scene::Init(Renderer* pRenderer, GameManager* pGameManager)
 {
 	m_pRenderer = pRenderer;
+	m_pGameManager = pGameManager;
 }
 
 void Scene::Start()

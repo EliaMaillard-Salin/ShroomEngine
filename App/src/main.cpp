@@ -17,8 +17,9 @@ int main()
 {
 	GameManager GM("AAAA", { 500, 500 });
 	GM.Init();
-	Scene* scene = new PongScene("PongScene");
+	PongScene* scene = new PongScene("PongScene");
 	GM.AddSceneInGameManager(*scene);
+	scene->SetPongScene();
 	GM.SetActiveScene("PongScene");
 	GM.Launch();
 	return 0;

@@ -18,6 +18,7 @@ void BulletScript::OnCollision(shroom::Collider* pOwned, shroom::Collider* pOthe
 {
 	m_pOwner->Destroy();
 	pOther->GetActor()->Destroy();
+	shroom::Logger::Info("KILL");
 }
 
 void BulletScript::SetIgnoredTarget(shroom::uint8 t)

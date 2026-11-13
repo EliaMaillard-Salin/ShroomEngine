@@ -94,8 +94,8 @@ bool PhysicsHandler::DetectCollisions(BoxCollider* pBox1, BoxCollider* pBox2)
 	Vector2f size1 = pBox1->GetWorldColliderTransform().GetScale() * pBox1->GetSize();
 	Vector2f size2 = pBox2->GetWorldColliderTransform().GetScale() * pBox2->GetSize();
 
-	if (!(pos1.X() > (pos2.X() + size2.X()) || pos1.X() + size1.X() < pos2.X())
-		 || pos1.Y() > pos2.Y() + size2.Y() || pos1.Y() + size1.Y() < pos2.Y())
+	if (!(pos1.X() > (pos2.X() + size2.X()) || pos1.X() + size1.X() < pos2.X()
+		 || pos1.Y() > pos2.Y() + size2.Y() || pos1.Y() + size1.Y() < pos2.Y()))
 	{
 		return true;
 	}

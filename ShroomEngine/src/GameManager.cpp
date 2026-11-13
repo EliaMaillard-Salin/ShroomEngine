@@ -146,7 +146,7 @@ void GameManager::SetActiveScene(std::string sceneName)
 
 void GameManager::AddSceneInGameManager(Scene& rScene)
 {
-	rScene.Init(m_pRenderer.get());
+	rScene.Init(m_pRenderer.get(),this);
 	if (m_scenes.find(rScene.GetName()) != m_scenes.end())
 	{
 		Logger::Info("A Scene Named " + rScene.GetName() + " already in GameManager");
@@ -157,10 +157,18 @@ void GameManager::AddSceneInGameManager(Scene& rScene)
 
 void GameManager::RemoveSceneFromGameManager(std::string sceneName)
 {
-	if (m_scenes.find(sceneName) == m_scenes.end())
+	std::map<std::string,Scene*>::iterator it = m_scenes.find(sceneName);
+	if (it == m_scenes.end())
 	{
 		Logger::Info("Not Scene named " + sceneName + " in GameManager");
 		return;
 	}
-	m_scenes.erase(sceneName);
+	Scene* pScene = it->second;
+	m_scenes.erase(it);
+	delete pScene;
+}
+
+Window const& GameManager::GetWindow()
+{
+	return *m_pWindow;
 }

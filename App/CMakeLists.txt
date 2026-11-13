@@ -1,7 +1,7 @@
 project(App)
 
 
-add_executable(${PROJECT_NAME} "src/main.cpp" "src/PongScene.cpp"  "src/PlayerScript.cpp" "src/EnemyScript.cpp" "src/Bullet.cpp" )
+add_executable(${PROJECT_NAME} "src/main.cpp" "src/PongScene.cpp"  "src/PlayerScript.cpp" "src/EnemyScript.cpp" "src/Bullet.cpp"  "include/Ball.h" "src/Ball.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${PROJECT_SOURCE_DIR}/include/"

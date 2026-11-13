@@ -7,26 +7,54 @@
 #include "Bullet.h"
 
 PlayerScript::PlayerScript(std::string name, shroom::Actor* pOwner):
-	ScriptComponent(name,pOwner), m_speed(5.0f)
+	ScriptComponent(name,pOwner), m_speed(5.0f), m_move(false)
 {
 }
 
 void PlayerScript::OnInputPressed(SDL_Event event)
 {
-	if (event.type != SDL_KEYDOWN)
-		return;
+	if (event.type == SDL_KEYDOWN)
+	{
+		if (event.key.keysym.sym == keyUp)	
+		{
+			dir = -1.0f;
+			m_move = true;
+		}
+		if (event.key.keysym.sym == keyDown)
+		{
+			dir = 1.0f;
+			m_move = true;
+		}
+		if (event.key.keysym.sym == SDLK_e)
+			SpawnBullet();
+	}
 
-	if (event.key.keysym.sym == SDLK_q)
-		m_pOwner->GetTransform().AddPositionX(-m_speed);
-	if (event.key.keysym.sym == SDLK_d)
-		m_pOwner->GetTransform().AddPositionX(m_speed);
-	if (event.key.keysym.sym == SDLK_e)
-		SpawnBullet();
+	if (event.type == SDL_KEYUP)
+	{
+		if (event.key.keysym.sym == keyUp)
+			m_move = false;
+		if (event.key.keysym.sym == keyDown)
+			m_move = false;
+	}
+}
+
+void PlayerScript::Update()
+{
+	if (m_move)
+	{
+		m_pOwner->GetTransform().AddPositionY(m_speed * dir);
+	}
 }
 
 void PlayerScript::OnCollision(shroom::Collider* pOwned, shroom::Collider* pOther)
 {
 	shroom::Logger::Info("COLLISION DETECTED IN SCRIPT");
+}
+
+void PlayerScript::SetKeyToMove(SDL_KeyCode up, SDL_KeyCode down)
+{
+	keyUp = up;
+	keyDown = down;
 }
 
 void PlayerScript::SpawnBullet()

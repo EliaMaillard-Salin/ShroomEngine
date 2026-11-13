@@ -16,6 +16,9 @@ namespace shroom
 		T& X();
 		T& Y();
 
+		T GetX() const;
+		T GetY() const;
+
 		void operator+=(Vector2<T> const& val);
 		Vector2<T> operator+(Vector2<T> const& val);
 

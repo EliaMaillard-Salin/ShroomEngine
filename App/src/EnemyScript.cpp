@@ -27,7 +27,6 @@ void EnemyScript::SpawnBullet()
 	shroom::BoxCollider& b = newBullet.AddComponent<shroom::BoxCollider>("BulletBox");
 	BulletScript& s = newBullet.AddComponent<BulletScript>("BulletS");
 	s.SetIgnoredTarget(1);
-	s.SetIgnoredTarget(2);
 	s.SetSpeed(5.0f);
 	newBullet.GetTransform().SetPosition(m_pOwner->GetTransform().GetPosition());
 }

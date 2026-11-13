@@ -16,6 +16,11 @@ Window::Window(Vector2<uint16> screenSize):
 
 }
 
+Vector2<uint16> const& shroom::Window::GetDimensions() const
+{
+	return m_dimensions;
+}
+
 SDL_Window* Window::GetSDLWindow()
 {
 	return m_pSDLWindow;

@@ -32,6 +32,11 @@ namespace shroom
 	inline T& Vector2<T>::Y() { return m_y; }
 
 	template <typename T>
+	inline T Vector2<T>::GetX() const { return m_x; }
+	template <typename T>
+	inline T Vector2<T>::GetY() const { return m_y; }
+
+	template <typename T>
 	inline void Vector2<T>::operator+=(Vector2<T> const& val)
 	{
 		m_x = m_x + val.m_x;

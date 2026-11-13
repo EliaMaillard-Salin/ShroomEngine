@@ -9,7 +9,7 @@ class PongScene : public shroom::Scene
 {
 public:
 	PongScene(const char* name);
-
+	void SetPongScene();
 	void OnUpdate() override;
 	void OnRender() override;
 

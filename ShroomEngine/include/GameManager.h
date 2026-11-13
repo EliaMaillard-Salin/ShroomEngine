@@ -38,6 +38,8 @@ namespace shroom
 		void AddSceneInGameManager(Scene& rScene);
 		void RemoveSceneFromGameManager(std::string sceneName);
 
+		Window const& GetWindow();
+
 	private:
 		void Render();
 		void Inputs(); // Events ? 

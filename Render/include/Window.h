@@ -15,7 +15,7 @@ namespace shroom
 		Window(Window const&) = delete;
 		Window& operator=(Window const&) = delete;
 
-		Vector2<uint16> const& GetDimensions();
+		Vector2<uint16> const& GetDimensions() const;
 		SDL_Window* GetSDLWindow();
 
 		bool Open(const char* title);

@@ -101,7 +101,10 @@ Scene* shroom::Actor::GetScene()
 
 void Actor::Destroy()
 {
+	if (m_state == ActorState::DEAD)
+		return;
 	m_pScene->DestroyActor(*this);
+	m_state = ActorState::DEAD;
 }
 
 void Actor::Delete()
